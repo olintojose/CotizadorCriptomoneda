@@ -22,8 +22,9 @@ const Select =  styled.select`
 `
 
 const useCriptomoneda = (label, stateInicial, opciones) => {
-
-    console.log(opciones);
+   
+   // console.log(opciones);
+ 
     //State de nuestro custon hook
     
     const [state, actualizarState] = useState(stateInicial);
@@ -33,13 +34,19 @@ const useCriptomoneda = (label, stateInicial, opciones) => {
     <Fragment>
         
         <Label>{label}</Label>
-    
+  
         <Select
             onChange={ e => actualizarState(e.target.value)}
             value={state}
         >
             <option value=""> -- Seleccione -- </option>
-        </Select>
+            
+            {opciones.map(opcion => (
+                
+                <option  key={opcion.CoinInfo.Id}  value={opcion.CoinInfo.Name}>  {opcion.CoinInfo.FullName}   </option>
+            )
+            )}
+        </Select> 
 
     </Fragment>
 );

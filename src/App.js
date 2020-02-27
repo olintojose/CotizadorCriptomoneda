@@ -1,7 +1,10 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import styled from '@emotion/styled';
+import axios from 'axios';
 import imagen from './cryptomonedas.png';
-import Formulario from './Components/Formulario'
+import Formulario from './Components/Formulario';
+import Cotizacion from './Components/Cotizacion';
+import Spinner from './Components/Spinner';
 
 const Contenedor = styled.div`
 max-width: 900px;
@@ -37,6 +40,61 @@ const Heading = styled.h1`
 `;
 
 function App() {
+
+  const [ moneda, guardarMoneda ] = useState ('');
+  const [ criptomoneda, guardarCriptomoneda ] = useState ('');
+
+  const [ resultado, guardarResultado ] = useState ({});
+
+  //Para cargar el Spinner
+
+  const [ cargando , guardarCargando ] = useState(false);
+
+  useEffect(()=> {
+
+    const cotizarCriptomoneda = async () => {
+
+      //Evitamos que se ejecute la primera vez
+    if (moneda=== '') return;
+
+    //Consultar la api para obtener la cotizacion
+
+    const url = `https://min-api.cryptocompare.com/data/pricemultifull?fsyms=${criptomoneda}&tsyms=${moneda}`;
+
+    const resultado = await axios.get(url);
+
+    //Mostrar el Spinner
+
+    guardarCargando(true);
+
+    //Ocultar el spinner y mostrar el resultado
+
+    setTimeout(() => {
+      // Cambiar el estado de cargando
+
+      guardarCargando(false);
+      //Guardar cotizacion
+
+      guardarResultado(resultado.data.DISPLAY[criptomoneda][moneda]);
+
+    }, 3000);
+
+    
+    }
+
+    cotizarCriptomoneda();
+
+
+
+
+   
+
+  }, [moneda, criptomoneda]);
+
+
+  //mostrar spinner o resultado
+
+  const componente = (cargando) ? <Spinner /> : <Cotizacion resultado = {resultado}/>
   return (
     <Contenedor>
       <div>
@@ -48,7 +106,12 @@ function App() {
       </div>
       <div>
         <Heading>Cotiza Criptomonedas al instante</Heading>
-        <Formulario/>
+        <Formulario
+          guardarMoneda={guardarMoneda} 
+          guardarCriptomoneda={guardarCriptomoneda}
+        />
+
+        {componente}
       </div>
     
     </Contenedor>

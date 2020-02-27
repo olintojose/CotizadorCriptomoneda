@@ -23,7 +23,7 @@ const Select =  styled.select`
 
 const useMoneda = (label, stateInicial, opciones) => {
 
-    console.log(opciones);
+ // console.log("1");
     //State de nuestro custon hook
 const [state, actualizarState] = useState(stateInicial);
 
@@ -36,10 +36,14 @@ const Seleccionar = () => (
         >
             <option value=""> -- Seleccione -- </option>
             {opciones.map(opcion => (
+                
                 <option key={opcion.codigo} value={opcion.codigo}>{opcion.nombre}</option>
-            ))}
+             
+            )
+            )}
 
         </Select>
+      
     </Fragment>
 );
 
